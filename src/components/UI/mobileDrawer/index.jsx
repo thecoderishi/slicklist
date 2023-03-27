@@ -11,7 +11,6 @@ import {
 import DrawerListItem from "../listItems";
 import logo from "../../../assets/logo.png"
 import { Link } from "react-router-dom";
-import { makeStyles } from '@mui/styles';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -23,21 +22,19 @@ import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) => ({
-    hideShow: {
-        visibility: 'hidden',
-        height: '0',
-        [theme.breakpoints.down('sm')]: {
-            visibility: 'visible',
-            height: 'auto',
-            backgroundColor: '#494c7d'
-        }
-    },
-}));
+const StyledRoot = styled('div')(({ theme }) => ({
+    visibility: 'hidden',
+    height: '0',
+    [theme.breakpoints.down('sm')]: {
+        visibility: 'visible',
+        height: 'auto',
+        backgroundColor: '#494c7d'
+    }
+}))
 
 export default function MobileDrawer() {
-    const classes = useStyles();
     const [show, setShow] = React.useState(false);
 
     const toggleDrawer = () => () => {
@@ -97,11 +94,10 @@ export default function MobileDrawer() {
             {
                 listItem.map((item, key) => (
                     <>
-                        <List key={item.name} className={classes.list}>
+                        <List key={item.name} >
                             <Link to={item.name.toLocaleLowerCase()} style={{ textDecoration: "none" }}>
                                 <DrawerListItem
                                     selected={selectedIndex === key + 1}
-                                    className={classes.listitems}
                                     onClick={() => setSelectedIndex(key + 1)}
                                     button
                                 >
@@ -118,11 +114,10 @@ export default function MobileDrawer() {
             }
 
             <Divider style={{ marginTop: "auto" }} />
-            <List className={classes.list}>
+            <List >
                 <Link to="/login" style={{ textDecoration: "none" }}>
                     <DrawerListItem
                         selected={selectedIndex === 10}
-                        className={classes.listitems}
                         onClick={() => { setSelectedIndex(10) }}
                         button
                     >
@@ -137,20 +132,20 @@ export default function MobileDrawer() {
     );
 
     return (
-        <div className={classes.hideShow}>
+        <StyledRoot>
             <Grid container alignItems='center' style={{ height: '70px' }}>
                 <Grid item sm={2}>
                     <IconButton onClick={toggleDrawer()}>
                         <MenuIcon sx={{ color: '#fff' }} />
                     </IconButton>
                     <Drawer anchor='left' open={show} onClose={toggleDrawer()}>
-                        {list('right')}
+                        {list()}
                     </Drawer>
                 </Grid>
                 <Grid item sm={2}>
                     <img src={logo} alt="" style={{ float: 'right', marginLeft: 10, width: 100 }} />
                 </Grid>
             </Grid>
-        </div>
+        </StyledRoot>
     );
 }

@@ -13,7 +13,6 @@ import {
 import DrawerListItem from "../listItems";
 import logo from "../../../assets/logo.png"
 import { Link } from "react-router-dom";
-import { makeStyles } from "@mui/styles";
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -25,47 +24,44 @@ import PermPhoneMsgIcon from '@mui/icons-material/PermPhoneMsg';
 import SettingsIcon from '@mui/icons-material/Settings';
 import LiveHelpIcon from '@mui/icons-material/LiveHelp';
 import LogoutIcon from '@mui/icons-material/Logout';
+import { styled } from '@mui/material/styles';
 
-const drawerWidth = 260;
+const StyledRoot = styled('div')(({ theme }) => ({
+    display: "flex",
+    [theme.breakpoints.down("sm")]: {
+        display: "none",
+    }
+}))
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "flex",
-        [theme.breakpoints.down("sm")]: {
-            display: "none",
-        },
-    },
-    drawer: {
-        width: drawerWidth,
-        flexShrink: 0,
-        whiteSpace: "nowrap",
-    },
-    drawerOpen: {
-        width: drawerWidth,
-        transition: theme.transitions.create("width", {
+const StyledDrawer = styled(Drawer)(({ open, theme }) => ({
+    width: open ? 260 : 73,
+    overflowX: open ? '' : 'hidden',
+    transition: open ?
+        theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerClose: {
-        transition: theme.transitions.create("width", {
+        })
+        :
+        theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.leavingScreen,
         }),
-        overflowX: "hidden",
-        width: 73,
+    '& .MuiDrawer-paper': {
+        width: open ? 260 : 73,
+        overflowX: open ? '' : 'hidden',
+        transition: open ?
+            theme.transitions.create("width", {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.enteringScreen,
+            })
+            :
+            theme.transitions.create("width", {
+                easing: theme.transitions.easing.sharp,
+                duration: theme.transitions.duration.leavingScreen,
+            }),
     },
-    listitems: {
-        width: "90%",
-    },
-    list: {
-        width: "90%",
-    },
-    head: {
-        padding: 0,
-        marginRight: "auto",
-        marginLeft: "15px",
-    },
+    flexShrink: 0,
+    whiteSpace: "nowrap",
 }));
 
 const listItem = [
@@ -105,44 +101,37 @@ const listItem = [
 
 export default function NavCustomDrawer() {
 
-    const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [selectedIndex, setSelectedId] = React.useState(1);
 
     const handleDrawerToggle = () => {
         setOpen(!open);
     };
 
-    const [selectedIndex, setSelectedId] = React.useState(1);
     const setSelectedIndex = (index) => {
         setSelectedId(index);
     };
 
     return (
-        <div className={classes.root}>
+        <StyledRoot >
             <CssBaseline />
-            <Drawer
+            <StyledDrawer
                 variant="permanent"
-                className={clsx(classes.drawer, {
-                    [classes.drawerOpen]: open,
-                    [classes.drawerClose]: !open,
-                })}
-                classes={{
-                    paper: clsx({
-                        [classes.drawerOpen]: open,
-                        [classes.drawerClose]: !open,
-                    }),
-                }}
+                open={open}
             >
-                <List className={classes.head}>
+                <List sx={{ padding: 0, marginRight: "auto" }}>
                     <ListItem >
                         <ListItemIcon>
                             {open ? (
-                                <IconButton
-                                    style={{ color: "#0873d0" }}
-                                    onClick={handleDrawerToggle}
-                                >
-                                    <CloseIcon color="primary" />
-                                </IconButton>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <IconButton
+                                        style={{ color: "#0873d0" }}
+                                        onClick={handleDrawerToggle}
+                                    >
+                                        <CloseIcon color="primary" />
+                                    </IconButton>
+                                    <img src={logo} style={{ marginLeft: 12, width: 100, height: 20 }} alt='log' />
+                                </div>
                             ) : (
                                 <IconButton onClick={handleDrawerToggle}>
                                     <MenuIcon color="primary" />
@@ -151,23 +140,14 @@ export default function NavCustomDrawer() {
                         </ListItemIcon>
                     </ListItem>
                 </List>
-                <List>
-                    <ListItem>
-                        <ListItemIcon>
-                            {open && (
-                                <img src={logo} style={{ marginLeft: 12, width: 100 }} alt='log' />
-                            )}
-                        </ListItemIcon>
-                    </ListItem>
-                </List>
                 {
                     listItem.map((item, key) => (
                         <>
-                            <List key={item.name} className={classes.list}>
+                            <List key={item.name} sx={{ paddingLeft: '5px' }}>
                                 <Link to={item.name.toLocaleLowerCase()} style={{ textDecoration: "none" }}>
                                     <DrawerListItem
                                         selected={selectedIndex === key + 1}
-                                        className={classes.listitems}
+                                        sx={{ width: "90%" }}
                                         onClick={() => setSelectedIndex(key + 1)}
                                         button
                                     >
@@ -183,11 +163,11 @@ export default function NavCustomDrawer() {
                     ))
                 }
                 <Divider style={{ marginTop: "auto" }} />
-                <List className={classes.list}>
+                <List sx={{ paddingLeft: '5px' }}>
                     <Link to="/signin" style={{ textDecoration: "none" }}>
                         <DrawerListItem
                             selected={selectedIndex === 10}
-                            className={classes.listitems}
+                            sx={{ width: "90%" }}
                             onClick={() => { setSelectedIndex(10) }}
                             button
                         >
@@ -198,7 +178,7 @@ export default function NavCustomDrawer() {
                         </DrawerListItem>
                     </Link>
                 </List>
-            </Drawer>
-        </div>
+            </StyledDrawer>
+        </StyledRoot>
     );
 }

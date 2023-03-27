@@ -9,22 +9,18 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import logo from '../../../assets/logo.png'
-import { makeStyles } from '@mui/styles';
+import { styled } from '@mui/material/styles';
 
-const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        [theme.breakpoints.down("sm")]: {
-            display: "none",
-        },
+const StyledRoot = styled('div')(({ theme }) => ({
+    flexGrow: 1,
+    [theme.breakpoints.down("sm")]: {
+        display: "none",
     },
-}));
+}))
 
-const pages = ['Products', 'Pricing', 'Blog'];
 const settings = ['Profile', 'Logout'];
 
 export default function CustomAppBar() {
-    const classes = useStyles();
     const [anchorElUser, setAnchorElUser] = React.useState(null);
 
     const handleOpenUserMenu = (event) => {
@@ -36,7 +32,7 @@ export default function CustomAppBar() {
     };
 
     return (
-        <Box className={classes.root}>
+        <StyledRoot>
             <AppBar position="static">
                 <Toolbar>
                     <Box sx={{ flexGrow: 1, display: 'flex' }}>
@@ -73,6 +69,6 @@ export default function CustomAppBar() {
                     </Box>
                 </Toolbar>
             </AppBar>
-        </Box>
+        </StyledRoot>
     );
 }
